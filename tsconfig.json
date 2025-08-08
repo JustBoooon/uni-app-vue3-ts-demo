@@ -1,0 +1,28 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "verbatimModuleSyntax": true,
+    "ignoreDeprecations": "5.0", // 临时忽略"Option 'importsNotUsedAsValues' is deprecated..."警告
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "lib": ["esnext", "dom"],
+    "types": [
+      "@dcloudio/types",    // uni-app 核心类型
+      "@types/wechat-miniprogram",
+      "@uni-helper/uni-app-types",  // 可选的增强类型
+      "vite/client"         // Vite 环境类型
+    ]
+  },
+  // 解决类型“{ class: string; }”的参数不能赋给类型“ComponentPublicInstanceConstructor...
+  "vueCompilerOptions": {
+    "nativeTags": [
+      "div",
+      "img",
+      "..."
+    ]
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+}
