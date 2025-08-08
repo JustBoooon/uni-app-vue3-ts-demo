@@ -1,5 +1,6 @@
 <template>
-  <div class="my">my</div>
+  <div class="my">my 我的</div>
+  
 </template>
 
 <script lang="ts" setup>
