@@ -1,4 +1,5 @@
 {
+	// 组件自动引入
 	"easycom": {
 		"autoscan": true,
 		"custom": {

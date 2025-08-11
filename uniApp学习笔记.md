@@ -132,7 +132,128 @@ vue3+ts
    pnpm i sass-loader@10.1.1 -D
    ```
 
+
+
+
+## Pinia 持久化
+
+### 文件结构
+
+```
+src/
+├── stores/                # Pinia 状态管理根目录
+│   ├── index.ts           # Pinia 实例初始化文件
+│   ├── modules/           # 按功能拆分的状态模块
+│   │   ├── user.ts        # 用户相关状态
+```
+
+### 添加及配置流程
+
+1. 安装pinia
+
+   ```
+   pnpm install pinia
+   ```
+
+2. 安装持久化插件
+
+   ```
+   pnpm i pinia-plugin-persistedstate
+   ```
+
+3. pinia 配置
+
+   ```ts
+   // 在 src/stores/index.ts 下配置
+   import { createPinia } from 'pinia'
+   import persist from 'pinia-plugin-persistedstate'
    
+   // 创建 pinia 实例
+   const pinia = createPinia()
+   // 使用持久化存储插件
+   pinia.use(persist)
+   
+   // 默认导出，供 main.ts 使用
+   export default pinia
+   
+   // 模块统一导出
+   export * from './modules/member'
+   ```
+
+   ```ts
+   // 在 main.ts 下配置
+   ...
+   
+   // 导入 pinia 实例
+   import pinia from "./stores"
+   
+   export function createApp() {
+     ...
+   
+     // 使用 pinia
+     app.use(pinia)
+   
+     return {
+       app,
+     }
+   }
+   ```
+
+4. 注：安装后运行如有`[vite]: Rollup failed to resolve import "destr" from...`报错
+
+   需安装两个缺失的依赖
+
+   ```
+   pnpm install destr
+   pnpm install deep-pick-omit
+   ```
+
+### 持久化 demo
+
+```ts
+// 在 src/stores/modules/demo.ts 下配置
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
+
+export const useMemberStore = defineStore(
+  'member',
+  () => {
+    const profile = ref()
+
+    const setProfile = (val: any) => {
+      profile.value = val
+    }
+
+    const clearProfile = () => {
+      profile.value = undefined
+    }
+
+    return {
+      profile,
+      setProfile,
+      clearProfile
+    }
+  },
+  // 持久化
+  {
+    // 网页端写法
+    // persist: true
+    persist: {
+      storage: {
+        getItem(key) {
+          // 网页端写法
+          // localStorage.setItem()
+          // 多端兼容写法
+          return uni.getStorageSync(key)
+        },
+        setItem(key, value) {
+          uni.setStorageSync(key, value)
+        },
+      }
+    }
+  }
+)
+```
 
 
 
