@@ -14,7 +14,7 @@
       用户信息：{{ memberStore.profile }}
     </view>
     <button
-      @tap="getTest()"
+      @tap="getBanner()"
       type="primary" plain size="mini">
       测试请求
     </button>
@@ -23,16 +23,26 @@
 
 <script lang="ts" setup>
 import { useMemberStore } from '@/stores'
-import '@/utils/http'
+import { http } from '@/utils/http'
 
 const memberStore = useMemberStore()
 
-const getTest = () => {
-  uni.request({
+interface BannerItem {
+  hrefUrl: string
+  id: string
+  imgUrl: string
+  type: string
+}
+const getBanner = async () => {
+  const res = await http<BannerItem[]>({
     method: 'GET',
     url: '/home/banner'
   })
+
+  console.log(`请求成功`, res.result);
 }
+
+
 
 </script>
 
